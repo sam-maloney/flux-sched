@@ -703,6 +703,8 @@ int dfu_impl_t::dom_slot (const jobmeta_t &meta,
     for (auto &edg_group : edg_group_vector)
         dfu.add (dom, slot_rt, edg_group);
 
+fprintf(stderr, "nslots = %u,\tqual_num_slots = %u\n", nslots, qual_num_slots);
+
 done:
     return (qual_num_slots) ? 0 : -1;
 }
@@ -1218,6 +1220,8 @@ int dfu_impl_t::select (Jobspec::Jobspec &j, vtx_t root, jobmeta_t &meta, bool e
         rc = resolve_graph (root, j.resources, dfu, excl, &needs);
         m_graph_db->metadata.v_rt_edges[dom].set_for_trav_update (needs, x_in, m_best_k_cnt);
     }
+fprintf(stderr, "Hello from dfu_impl_t::select\n");
+dfu.print_ssys_map ();
     return rc;
 }
 

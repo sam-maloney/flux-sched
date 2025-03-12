@@ -16,6 +16,8 @@ extern "C" {
 
 #include "resource/traversers/dfu_impl.hpp"
 
+#include <boost/graph/graphviz.hpp>
+
 using namespace Flux::Jobspec;
 using namespace Flux::resource_model;
 using namespace Flux::resource_model::detail;
@@ -336,7 +338,7 @@ int dfu_impl_t::upd_dfv (vtx_t u,
             bool x = get_eff_exclusive ((*m_graph)[*ei].idata.get_exclusive (), mod);
             unsigned needs =
                 get_eff_needs ((*m_graph)[*ei].idata.get_needs (), (*m_graph)[tgt].size, mod);
-
+fprintf(stderr, "needs = %u\n", needs);
             if (subsystem == dom) {
                 n_plan_sub += upd_dfv (tgt, writers, needs, x, jobmeta, full, dfu, mod);
             } else {
@@ -851,11 +853,26 @@ int dfu_impl_t::update (vtx_t root, std::shared_ptr<match_writers_t> &writers, j
 
     bool emit_shadow = modify_traversal (root, false);
     if ((rc = upd_dfv (root, writers, needs, x, jobmeta, true, dfu, emit_shadow)) > 0) {
+
+fprintf(stderr, "Hello from dfu_impl_t::update\n");
+fprintf(stderr, "slots = %lu\n", m_graph_db->metadata.by_type[slot_rt].size());
+
+//write_graphviz(std::cerr, *m_graph);
+//write_graphviz(std::cerr, m_graph_db->resource_graph);
+
+for (const auto& [key, value] : dfu) {
+    fprintf(stderr, "Resource = %s,\tvalue = %ld\n", key.c_str(), value);
+}
+
         uint64_t starttime = jobmeta.at;
         uint64_t endtime = jobmeta.at + jobmeta.duration;
         if (writers->emit_tm (starttime, endtime) == -1) {
             m_err_msg += __FUNCTION__;
             m_err_msg += ": emit_tm returned -1.\n";
+        }
+        if (writers->emit_nslots (jobmeta.nslots) == -1) {
+            m_err_msg += __FUNCTION__;
+            m_err_msg += ": emit_nslots returned -1.\n";
         }
         if (jobmeta.is_queue_set ()) {
             if (writers->emit_attrs ("queue", jobmeta.get_queue ()) == -1) {
@@ -921,6 +938,10 @@ int dfu_impl_t::update (vtx_t root,
         if (writers->emit_tm (starttime, endtime) == -1) {
             m_err_msg += __FUNCTION__;
             m_err_msg += ": emit_tm returned -1.\n";
+        }
+        if (writers->emit_nslots (jobmeta.nslots) == -1) {
+            m_err_msg += __FUNCTION__;
+            m_err_msg += ": emit_nslots returned -1.\n";
         }
         if (jobmeta.is_queue_set ()) {
             if (writers->emit_attrs ("queue", jobmeta.get_queue ()) == -1) {

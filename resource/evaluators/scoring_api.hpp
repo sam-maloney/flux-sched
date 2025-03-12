@@ -97,6 +97,24 @@ class scoring_api_t {
         return res_evals.transform<output_it, unary_op> (o_it, uop);
     }
 
+    void print_ssys_map (subsystem_t s)
+    {
+        fprintf(stderr, "subsystem = %s\n", s.c_str ());
+        for (const auto& [key, value] : m_ssys_map[s]) {
+            fprintf(stderr,
+                    "Key = %s,\tqualified_count = %u,\ttotal_count = %u\n",
+                    key.c_str (),
+                    value.qualified_count (),
+                    value.total_count ());
+        }
+    }
+    void print_ssys_map ()
+    {
+        for (const auto s : m_ssys_map.key_range()) {
+            print_ssys_map (s);
+        }
+    }
+
    private:
     intern::interned_key_vec<subsystem_t, std::map<resource_type_t, detail::evals_t>> m_ssys_map;
     bool m_hier_constrain_now = false;

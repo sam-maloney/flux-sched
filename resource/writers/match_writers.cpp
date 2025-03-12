@@ -931,6 +931,8 @@ int rv1_match_writers_t::emit_json (json_t **j_o, json_t **aux)
                              json_object_get (rlite_aux_o, "nodelist"),
                              "properties",
                              json_object_get (rlite_aux_o, "properties"),
+                             "nslots",
+                             m_nslots,
                              "starttime",
                              m_starttime,
                              "expiration",
@@ -953,6 +955,8 @@ int rv1_match_writers_t::emit_json (json_t **j_o, json_t **aux)
                              rlite_o,
                              "nodelist",
                              json_object_get (rlite_aux_o, "nodelist"),
+                             "nslots",
+                             m_nslots,
                              "starttime",
                              m_starttime,
                              "expiration",
@@ -1044,6 +1048,12 @@ int rv1_match_writers_t::emit_tm (uint64_t start_tm, uint64_t end_tm)
     return 0;
 }
 
+int rv1_match_writers_t::emit_nslots (uint64_t nslots)
+{
+    m_nslots = nslots;
+    return 0;
+}
+
 int rv1_match_writers_t::emit_attrs (const std::string &k, const std::string &v)
 {
     m_attrs[k] = v;
@@ -1080,6 +1090,8 @@ int rv1_nosched_match_writers_t::emit_json (json_t **j_o, json_t **aux)
                                 json_object_get (rlite_aux_o, "nodelist"),
                                 "properties",
                                 json_object_get (rlite_aux_o, "properties"),
+                                "nslots",
+                                m_nslots,
                                 "starttime",
                                 m_starttime,
                                 "expiration",
@@ -1099,6 +1111,8 @@ int rv1_nosched_match_writers_t::emit_json (json_t **j_o, json_t **aux)
                                 rlite_o,
                                 "nodelist",
                                 json_object_get (rlite_aux_o, "nodelist"),
+                                "nslots",
+                                m_nslots,
                                 "starttime",
                                 m_starttime,
                                 "expiration",
@@ -1156,6 +1170,12 @@ int rv1_nosched_match_writers_t::emit_tm (uint64_t start_tm, uint64_t end_tm)
 {
     m_starttime = start_tm;
     m_expiration = end_tm;
+    return 0;
+}
+
+int rv1_nosched_match_writers_t::emit_nslots (uint64_t nslots)
+{
+    m_nslots = nslots;
     return 0;
 }
 
