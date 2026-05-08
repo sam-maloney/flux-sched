@@ -65,6 +65,10 @@ class match_writers_t {
     {
         return 0;
     }
+    virtual int emit_nslots (int64_t nslots)
+    {
+        return 0;
+    }
     virtual int emit_attrs (const std::string &k, const std::string &v)
     {
         return 0;
@@ -275,6 +279,7 @@ class rv1_match_writers_t : public match_writers_t {
                   const edg_t &e,
                   bool excl_parent) override;
     virtual int emit_tm (int64_t start_tm, int64_t end_tm);
+    virtual int emit_nslots (int64_t nslots);
     virtual int emit_attrs (const std::string &k, const std::string &v);
 
    protected:
@@ -284,6 +289,7 @@ class rv1_match_writers_t : public match_writers_t {
     int attrs_json (json_t **o);
 
     rlite_match_writers_t rlite;
+    int64_t m_nslots = 0;
     int64_t m_starttime = 0;
     int64_t m_expiration = 0;
     std::map<std::string, std::string> m_attrs;
@@ -305,9 +311,11 @@ class rv1_nosched_match_writers_t : public match_writers_t {
                   bool exclusive,
                   bool excl_parent) override;
     virtual int emit_tm (int64_t start_tm, int64_t end_tm);
+    virtual int emit_nslots (int64_t nslots);
 
    private:
     rlite_match_writers_t rlite;
+    int64_t m_nslots = 0;
     int64_t m_starttime = 0;
     int64_t m_expiration = 0;
 };

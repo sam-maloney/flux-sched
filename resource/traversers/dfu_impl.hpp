@@ -47,6 +47,7 @@ struct jobmeta_t {
     int64_t now = -1;
     int64_t duration = SYSTEM_DEFAULT_DURATION;  // will need config ultimately
     std::shared_ptr<Jobspec::Constraint> constraint;
+    int64_t nslots = 0;
 
     bool is_queue_set () const
     {

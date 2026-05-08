@@ -118,6 +118,16 @@ void scoring_api_t::resrc_types (subsystem_t s, std::vector<resource_type_t> &v)
         v.push_back (kv.first);
 }
 
+int64_t scoring_api_t::nslots ()
+{
+    return m_nslots;
+}
+
+void scoring_api_t::accumulate_nslots (int64_t nslots)
+{
+    m_nslots += nslots;
+}
+
 // overall_score and avail are temporary space such that
 // a child vertex visitor can pass the info to the parent vertex
 int64_t scoring_api_t::overall_score ()

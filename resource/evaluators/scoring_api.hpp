@@ -52,6 +52,8 @@ class scoring_api_t {
     bool hier_constrain_now ();
     void merge (const scoring_api_t &o);
     void resrc_types (subsystem_t s, std::vector<resource_type_t> &v);
+    int64_t nslots ();
+    void accumulate_nslots (int64_t nslots);
     int64_t overall_score ();
     void set_overall_score (int64_t overall);
     unsigned int avail ();
@@ -100,6 +102,7 @@ class scoring_api_t {
    private:
     intern::interned_key_vec<subsystem_t, std::map<resource_type_t, detail::evals_t>> m_ssys_map;
     bool m_hier_constrain_now = false;
+    int64_t m_nslots = 0;
     int64_t m_overall_score = -1;
     unsigned int m_avail = 0;
 };

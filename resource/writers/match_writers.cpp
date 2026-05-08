@@ -992,7 +992,7 @@ int rv1_match_writers_t::emit_json (json_t **j_o, json_t **aux)
         goto ret;
     }
     if (json_object_get (rlite_aux_o, "properties")) {
-        if (!(o = json_pack ("{s:i s:{s:o s:O s:O s:I s:I} s:o}",
+        if (!(o = json_pack ("{s:i s:{s:o s:O s:O s:o* s:I s:I} s:o}",
                              "version",
                              1,
                              "execution",
@@ -1002,6 +1002,8 @@ int rv1_match_writers_t::emit_json (json_t **j_o, json_t **aux)
                              json_object_get (rlite_aux_o, "nodelist"),
                              "properties",
                              json_object_get (rlite_aux_o, "properties"),
+                             "nslots",
+                             m_nslots ? json_integer (m_nslots) : NULL,
                              "starttime",
                              m_starttime,
                              "expiration",
@@ -1016,7 +1018,7 @@ int rv1_match_writers_t::emit_json (json_t **j_o, json_t **aux)
             goto ret;
         }
     } else {
-        if (!(o = json_pack ("{s:i s:{s:o s:O s:I s:I} s:o}",
+        if (!(o = json_pack ("{s:i s:{s:o s:O s:o* s:I s:I} s:o}",
                              "version",
                              1,
                              "execution",
@@ -1024,6 +1026,8 @@ int rv1_match_writers_t::emit_json (json_t **j_o, json_t **aux)
                              rlite_o,
                              "nodelist",
                              json_object_get (rlite_aux_o, "nodelist"),
+                             "nslots",
+                             m_nslots ? json_integer (m_nslots) : NULL,
                              "starttime",
                              m_starttime,
                              "expiration",
@@ -1117,6 +1121,12 @@ int rv1_match_writers_t::emit_tm (int64_t start_tm, int64_t end_tm)
     return 0;
 }
 
+int rv1_match_writers_t::emit_nslots (int64_t nslots)
+{
+    m_nslots = nslots;
+    return 0;
+}
+
 int rv1_match_writers_t::emit_attrs (const std::string &k, const std::string &v)
 {
     m_attrs[k] = v;
@@ -1148,7 +1158,7 @@ int rv1_nosched_match_writers_t::emit_json (json_t **j_o, json_t **aux)
     if ((rc = rlite.emit_json (&rlite_o, &rlite_aux_o)) < 0)
         goto ret;
     if (json_object_get (rlite_aux_o, "properties")) {
-        if (!(*j_o = json_pack ("{s:i s:{s:o s:O s:O s:I s:I}}",
+        if (!(*j_o = json_pack ("{s:i s:{s:o s:O s:O s:o* s:I s:I}}",
                                 "version",
                                 1,
                                 "execution",
@@ -1158,6 +1168,8 @@ int rv1_nosched_match_writers_t::emit_json (json_t **j_o, json_t **aux)
                                 json_object_get (rlite_aux_o, "nodelist"),
                                 "properties",
                                 json_object_get (rlite_aux_o, "properties"),
+                                "nslots",
+                                m_nslots ? json_integer (m_nslots) : NULL,
                                 "starttime",
                                 m_starttime,
                                 "expiration",
@@ -1169,7 +1181,7 @@ int rv1_nosched_match_writers_t::emit_json (json_t **j_o, json_t **aux)
             goto ret;
         }
     } else {
-        if (!(*j_o = json_pack ("{s:i s:{s:o s:O s:I s:I}}",
+        if (!(*j_o = json_pack ("{s:i s:{s:o s:O s:o* s:I s:I}}",
                                 "version",
                                 1,
                                 "execution",
@@ -1177,6 +1189,8 @@ int rv1_nosched_match_writers_t::emit_json (json_t **j_o, json_t **aux)
                                 rlite_o,
                                 "nodelist",
                                 json_object_get (rlite_aux_o, "nodelist"),
+                                "nslots",
+                                m_nslots ? json_integer (m_nslots) : NULL,
                                 "starttime",
                                 m_starttime,
                                 "expiration",
@@ -1235,6 +1249,12 @@ int rv1_nosched_match_writers_t::emit_tm (int64_t start_tm, int64_t end_tm)
 {
     m_starttime = start_tm;
     m_expiration = end_tm;
+    return 0;
+}
+
+int rv1_nosched_match_writers_t::emit_nslots (int64_t nslots)
+{
+    m_nslots = nslots;
     return 0;
 }
 

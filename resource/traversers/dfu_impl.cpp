@@ -745,6 +745,7 @@ int dfu_impl_t::dom_slot (const jobmeta_t &meta,
         dfu.add (dom, slot_rt, edg_group);
 
 done:
+    dfu.accumulate_nslots (qual_num_slots);
     return (qual_num_slots) ? 0 : -1;
 }
 
@@ -795,6 +796,7 @@ int dfu_impl_t::dom_dfv (const jobmeta_t &meta,
         goto done;
     if ((rc = resolve (dfu, to_parent)) != 0)
         goto done;
+    to_parent.accumulate_nslots (dfu.nslots ());
     to_parent.set_avail (avail);
     to_parent.set_overall_score (dfu.overall_score ());
 
@@ -1277,6 +1279,7 @@ int dfu_impl_t::select (Jobspec::Jobspec &j, vtx_t root, jobmeta_t &meta, bool e
     m_preorder = 0;
     m_postorder = 0;
     rc = dom_dfv (meta, root, j.resources, true, &x_in, dfu);
+    meta.nslots = dfu.nslots ();
     if (rc == 0) {
         unsigned int needs = 0;
         eval_edg_t ev_edg (dfu.avail (), dfu.avail (), excl);
